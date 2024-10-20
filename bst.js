@@ -115,7 +115,53 @@ findMin(node)
     return node; 
 }
 
+// inputted value will be searched in the BST
+search(value)
+{
+    //try to access the recent tree
+let target = this.root;
+
+if(value !== target)
+{
+    return null;
+}
+while (target !== null)
+{
+    if (value < target.data)
+    {
+        target = target.left;
+        
+    }
+    else if (value > target.data)
+    {   
+        target = target.right;
+        
+    }
+    else if ( value === target.data)
+    {
+        console.log("YEAH IT DOES EXIST HERE");
+        return target;
+    }
+}
+    console.log("VALUE NOT FOUND");
+    return null;
+
+}
+
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const prettyPrint = (node, prefix = "", isLeft = true) => {
     if (node === null) 
