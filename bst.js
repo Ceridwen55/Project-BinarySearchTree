@@ -148,6 +148,143 @@ while (target !== null)
 
 }
 
+levelOrder(callback)
+{   let node = this.root;
+    if (typeof callback !== 'function') 
+    {
+        throw new Error("A callback function is required");
+    }
+
+    // Helper function to get the height of the tree
+    const height = (node) => 
+    {
+        if (node === null) return 0;
+        return Math.max(height(node.left), height(node.right)) + 1;
+    };
+
+    // Helper function to process nodes at a given level
+    const processLevel = (node, level) => 
+    {
+        if (node === null) return;
+        if (level === 1) {
+            callback(node);
+        } else if (level > 1) {
+            processLevel(node.left, level - 1);
+            processLevel(node.right, level - 1);
+        }
+    };
+
+    // Get the height of the tree and process nodes level by level
+    let h = height(this.root);
+    for (let i = 1; i <= h; i++) 
+    {
+        processLevel(this.root, i);
+    }
+
+}
+
+inOrder(callback) 
+{
+    if (typeof callback !== 'function') 
+    {
+        throw new Error("A callback function is required");
+    }
+
+    const traverse = (node) => 
+    {
+        if (node === null) return;
+        traverse(node.left);
+        callback(node);
+        traverse(node.right);
+    };
+
+    traverse(this.root);
+}
+
+// PreOrder traversal (Root, Left, Right)
+preOrder(callback) {
+    if (typeof callback !== 'function') 
+    {
+        throw new Error("A callback function is required");
+    }
+
+    const traverse = (node) => 
+    {
+        if (node === null) return;
+        callback(node);
+        traverse(node.left);
+        traverse(node.right);
+    };
+
+    traverse(this.root);
+}
+
+// PostOrder traversal (Left, Right, Root)
+postOrder(callback) {
+    if (typeof callback !== 'function') 
+    {
+        throw new Error("A callback function is required");
+    }
+
+    const traverse = (node) => 
+    {
+        if (node === null) return;
+        traverse(node.left);
+        traverse(node.right);
+        callback(node);
+    };
+
+    traverse(this.root);
+}
+
+// Returns the height of a given node
+height(node) 
+{
+    if (node === null) return -1; // Height of null node is -1
+    return Math.max(this.height(node.left), this.height(node.right)) + 1;
+}
+
+// Returns the depth of a given node from the root
+depth(node, current = this.root, level = 0) 
+{
+    if (current === null) return -1;
+    if (current === node) return level;
+
+    let leftDepth = this.depth(node, current.left, level + 1);
+    if (leftDepth !== -1) return leftDepth;
+
+    return this.depth(node, current.right, level + 1);
+}
+
+// Checks if the tree is balanced
+isBalanced() {
+    const checkBalance = (node) => 
+    {
+        if (node === null) return true;
+
+        let leftHeight = this.height(node.left);
+        let rightHeight = this.height(node.right);
+
+        if (Math.abs(leftHeight - rightHeight) > 1) return false;
+
+        return checkBalance(node.left) && checkBalance(node.right);
+    };
+
+    return checkBalance(this.root);
+}
+
+// Rebalances the tree if it's unbalanced
+rebalance() {
+    const toArray = (node) => 
+    {
+        if (node === null) return [];
+        return [...toArray(node.left), node.data, ...toArray(node.right)];
+    };
+
+    let sortedArray = toArray(this.root); // Get the sorted array from the tree
+    this.root = this.buildTree(sortedArray, 0, sortedArray.length - 1); // Rebuild the tree
+};
+
 };
 
 
